@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:turksat_survey/Class/address.dart';
-import 'package:turksat_survey/addressScreen.dart';
 
 class AddressDDB extends StatefulWidget {
-  String text;
-  List<Object> values;
+  final String text;
+  final List<Object> values;
   AddressDDB(this.text, this.values);
   @override
   State<StatefulWidget> createState() => MyAddressDDB(text, values);

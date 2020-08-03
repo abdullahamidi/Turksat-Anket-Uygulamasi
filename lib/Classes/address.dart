@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class Address {
   //Veritabanından çekilecek adreslerin depolanacağı map.
@@ -15,4 +17,11 @@ class Address {
   ];
 
   Address();
+
+  void getCities(List<Object> cities) {
+    var url = "https://localhost:44326/api/cities";
+    final response = http.get(url);
+    //cities = json.decode(response.body);
+    print(response);
+  }
 }

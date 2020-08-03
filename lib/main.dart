@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:turksat_survey/addressScreen.dart';
-import 'package:turksat_survey/surveyScreen.dart';
-import 'package:turksat_survey/LoginScreen.dart';
+
+import 'package:turksat_survey/Screens/surveyScreen.dart';
 
 void main() {
-  runApp(new AddressScreen());
+  runApp(new SurveyScreen());
 }
 
 class MyAppTheme extends StatelessWidget {

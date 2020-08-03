@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
-import './Class/Users.dart';
+import '../Classes/Users.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
@@ -95,5 +94,3 @@ class _MyLoginPage extends State<LoginPage> {
     );
   }
 }
-
-void SayiSay() {}
