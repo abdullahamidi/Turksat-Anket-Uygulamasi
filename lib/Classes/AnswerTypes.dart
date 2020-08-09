@@ -1,3 +1,1 @@
-class AnswerTypes {
-  AnswerTypes();
-}
+class AnswerTypes {}

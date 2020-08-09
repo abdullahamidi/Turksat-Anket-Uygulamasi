@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:turksat_survey/Classes/Answers.dart';
 
 class AnswerWidget extends StatefulWidget {
   int answerNumber;
-  String answerText;
-  List<String> answerList;
+  final String answerText;
+  final List<String> answerList;
 
   AnswerWidget(this.answerText, this.answerList);
   @override
@@ -24,7 +23,9 @@ class MyAnswerWidget extends State<AnswerWidget> {
         children: <Widget>[
           Text(
             answerText,
-            style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+            style: TextStyle(
+                fontSize: answerList.length > 4 ? 14 : 22,
+                fontWeight: FontWeight.w600),
           ),
           Radio(
               value: answerText,

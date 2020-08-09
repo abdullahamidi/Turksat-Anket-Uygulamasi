@@ -1,17 +1,27 @@
 class Users {
-  String _name;
+  int _id;
+  String name;
   String _surName;
-  String _userName = '';
-  String _password = '';
+  String userName = '';
+  String password = '';
+  String _email;
+  String _phoneNumber;
 
-  Users(this._userName, this._password);
+  Users({this.userName, this.password});
 
   String get getUsername {
-    return this._userName;
+    return this.userName;
   }
 
   String get getPassword {
-    return this._password;
+    return this.password;
+  }
+
+  factory Users.fromJson(Map<String, dynamic> json) {
+    return Users(
+      userName: json['userName'],
+      password: json['password'],
+    );
   }
 
   //set setUsername(username) => this._userName = username;

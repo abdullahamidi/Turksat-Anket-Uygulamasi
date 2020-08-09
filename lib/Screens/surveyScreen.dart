@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:turksat_survey/Classes/AnswerTypes.dart';
-import 'package:turksat_survey/Classes/Answers.dart';
-import 'package:turksat_survey/Widgets/AnswerWidget.dart';
 import 'package:turksat_survey/Widgets/QuestionWidget.dart';
 
 class SurveyScreen extends StatelessWidget {

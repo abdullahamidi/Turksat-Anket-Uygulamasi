@@ -1,24 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:turksat_survey/Screens/addressScreen.dart';
 import '../Classes/Users.dart';
 
-class LoginScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Türksat Anket Sistemi",
-      home: LoginPage(),
-    );
-  }
-}
+/*Future<bool> verifyUser(String username, String password) async {
+  final url = 'http://10.0.2.2:44326/api/accounts/$username/$password';
+  var response = await http.get(url);
+  print(json.decode(response.body));
+}*/
 
-class LoginPage extends StatefulWidget {
+class LoginScreen extends StatefulWidget {
   @override
-  State<StatefulWidget> createState() => _MyLoginPage();
+  State<StatefulWidget> createState() => _MyLoginScreen();
 }
 
 //State Class
 
-class _MyLoginPage extends State<LoginPage> {
+class _MyLoginScreen extends State<LoginScreen> {
   final userController = TextEditingController();
   final pwdController = TextEditingController();
   bool _passwordVisibility = true;
@@ -81,10 +78,10 @@ class _MyLoginPage extends State<LoginPage> {
                       color: Colors.blue,
                       textColor: Colors.white,
                       onPressed: () {
-                        //user.setUsername = userController.text;
-                        //user.setPassword = pwdController.text;
-                        user = Users(userController.text, pwdController.text);
-                        print("${user.getUsername}  ${user.getPassword}");
+                        //verifyUser(userController.text, pwdController.text);
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => AddressScreen()));
+                        print("Hatalı giriş");
                       },
                       child: Text("Giriş Yap")),
                 ],

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:turksat_survey/Classes/Answers.dart';
-import 'package:turksat_survey/Classes/Questions.dart';
 import 'package:turksat_survey/Widgets/AnswerWidget.dart';
 
-enum answerTypes { yesOrNo, rating, openEnded, aggrement }
+enum answerTypes { yesOrNo, aggrement }
 
 List<Map<String, Object>> answersList = [
   {
@@ -11,39 +9,25 @@ List<Map<String, Object>> answersList = [
     'answers': ['Yes', 'No']
   },
   {
-    'answerType': 'rating',
-    'answers': [
-      Icons.mood,
-      Icons.sentiment_satisfied,
-      Icons.sentiment_neutral,
-      Icons.sentiment_dissatisfied,
-      Icons.mood_bad
-    ]
-  },
-  {'answerType': 'openEnded', 'answers': String},
-  {
     'answerType': 'aggrement',
     'answers': [
+      'Kesinlikle katılıyorum',
       'Katılıyorum',
       'Kararsızım',
       'Katılmıyorum',
+      'Kesinlikle katılmıyorum',
     ]
   }
 ];
 
 class QuestionWidget extends StatelessWidget {
-  answerTypes answerType;
+  final String questionText;
+  final answerTypes answerType;
 
   int determineAnswerType() {
     int i;
     switch (answerType) {
       case answerTypes.yesOrNo:
-        i = answerType.index;
-        break;
-      case answerTypes.rating:
-        i = answerType.index;
-        break;
-      case answerTypes.openEnded:
         i = answerType.index;
         break;
       case answerTypes.aggrement:
@@ -54,7 +38,6 @@ class QuestionWidget extends StatelessWidget {
     return i;
   }
 
-  String questionText;
   QuestionWidget(this.questionText, this.answerType);
   @override
   Widget build(BuildContext context) {
@@ -66,7 +49,7 @@ class QuestionWidget extends StatelessWidget {
               children: <Widget>[
                 Text(
                   "$questionText",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
                 ),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,

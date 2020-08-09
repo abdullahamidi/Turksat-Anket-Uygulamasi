@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "743088797067",
+    "firebase_url": "https://turksatsurvey-2cb2c.firebaseio.com",
+    "project_id": "turksatsurvey-2cb2c",
+    "storage_bucket": "turksatsurvey-2cb2c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:743088797067:android:644d2b748c82b2bbb3ab8e",
+        "android_client_info": {
+          "package_name": "com.example.turksat_survey"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "743088797067-9itr41eamlaq5oid4pdr766onlo502ua.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_7iuibn-JJQTVnFqGZz5seAVJQK9utwY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "743088797067-9itr41eamlaq5oid4pdr766onlo502ua.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
