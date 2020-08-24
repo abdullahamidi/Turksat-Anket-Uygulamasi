@@ -26,7 +26,7 @@ class _MyLoginScreen extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(title: Text("Türksat Anket Uygulaması")),
+      appBar: AppBar(title: Text("Türksat Anket Uygulaması")),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
           : SingleChildScrollView(

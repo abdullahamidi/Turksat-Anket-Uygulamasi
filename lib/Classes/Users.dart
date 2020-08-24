@@ -11,7 +11,7 @@ class Users {
   Users({this.userName, this.password});
 
   Future<void> verifyUser(String username, String pwd) async {
-    final url = "http://10.0.2.2:60065/api/accounts/verify/$username/$pwd";
+    final url = "http://192.168.1.104:60065/api/accounts/verify/$username/$pwd";
     var response = await http.get(url);
     if (response.statusCode == 200) {
       isVerified = json.decode(response.body);
@@ -21,7 +21,7 @@ class Users {
   }
 
   Future<void> getID(String username, String pwd) async {
-    final url = "http://10.0.2.2:60065/api/accounts/$username/$pwd";
+    final url = "http://192.168.1.104:60065/api/accounts/$username/$pwd";
     var response = await http.get(url);
     List<int> tempList = [];
     final data = json.decode(response.body);

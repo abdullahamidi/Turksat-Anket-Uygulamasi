@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:turksat_survey/Classes/Answers.dart';
 import 'package:turksat_survey/Classes/Questions.dart';
-import 'package:turksat_survey/Classes/api_connection.dart';
 import 'package:turksat_survey/Screens/LoginScreen.dart';
 import 'package:turksat_survey/Screens/SurveySelectScreen.dart';
 import 'package:turksat_survey/ViewModels/UserAnswersVM.dart';
 import 'package:turksat_survey/Widgets/QuestionWidget.dart';
 
 class SurveyScreen extends StatelessWidget {
-  ApiConnections apiConnection = ApiConnections();
+  Answers answers = Answers();
   bool _isLoading = false;
   UserAnswersVM userAnswers;
   Questions questions;
@@ -52,7 +51,7 @@ class SurveyScreen extends StatelessWidget {
                     textColor: Colors.white,
                     onPressed: () {
                       _isLoading = true;
-                      apiConnection.insertAddress(userAnswers).then((_) {
+                      answers.insertAnswers(userAnswers).then((_) {
                         _isLoading = false;
                         showDialog(
                             context: context,
@@ -65,8 +64,6 @@ class SurveyScreen extends StatelessWidget {
                                 content: Text(
                                   "Adres Başarıyla Kaydedildi",
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      fontFamily: "Oswald", fontSize: 20),
                                 ),
                                 actions: [
                                   FlatButton(
@@ -78,9 +75,6 @@ class SurveyScreen extends StatelessWidget {
                                       },
                                       child: Text(
                                         "Anket Seç",
-                                        style: TextStyle(
-                                            fontFamily: "Oswald",
-                                            fontSize: 18.0),
                                       )),
                                   FlatButton(
                                       onPressed: () {
@@ -88,27 +82,11 @@ class SurveyScreen extends StatelessWidget {
                                       },
                                       child: Text(
                                         "Çıkış Yap",
-                                        style: TextStyle(
-                                            fontFamily: "Oswald", fontSize: 18),
                                       ))
                                 ],
                               );
                             });
                       });
-                      // Alert(
-                      //   context: context,
-                      //   title: "Adres Başarıyla Kaydedildi",
-                      //   type: AlertType.success,
-                      //   image: Image.asset("assets/images/check.png"),
-                      // ).show();
-                      // successDialog(
-                      //   context,
-                      //   "Adres Başarıyla Kaydedildi",
-                      //   negativeText: "Çıkış Yap",
-                      //   negativeAction: () {},
-                      //   positiveText: "Yeni bir anket seç",
-                      //   positiveAction: () {},
-                      // );
                     },
                     child: _isLoading
                         ? CircularProgressIndicator()

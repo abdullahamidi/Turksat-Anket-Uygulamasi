@@ -56,63 +56,69 @@ class MyQuestionWidget extends State<QuestionWidget> {
   Widget build(BuildContext context) {
     return _isLoading
         ? Center(child: CircularProgressIndicator())
-        : Padding(
-            padding: const EdgeInsets.symmetric(vertical: 30),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                Text(
-                  "${questions.questionText}",
-                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
-                  textAlign: TextAlign.justify,
-                ),
-                Row(children: <Widget>[
-                  if (questions.selectionType == "MultipleChoice")
-                    for (var i = 0; i < answers.answers.length; i++)
-                      Expanded(
-                        child: RadioListTile(
-                            title: Text("${answers.answers[i].answerText}"),
-                            value: answers.answers[i].answerText,
-                            groupValue: groupValue,
-                            onChanged: (answer) {
+        : Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 30),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    Text(
+                      "${questions.questionText}",
+                      style:
+                          TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+                      textAlign: TextAlign.justify,
+                    ),
+                    Row(children: <Widget>[
+                      if (questions.selectionType == "MultipleChoice")
+                        for (var i = 0; i < answers.answers.length; i++)
+                          Expanded(
+                            child: RadioListTile(
+                                title: Text("${answers.answers[i].answerText}"),
+                                value: answers.answers[i].answerText,
+                                groupValue: groupValue,
+                                onChanged: (answer) {
+                                  setState(() {
+                                    groupValue = answer;
+                                    if (checkIsSelected(questions.id)) {
+                                      selectedqavm[index].answerText = answer;
+                                    } else {
+                                      selectedqavm.add(SelectedqaVM(
+                                          questionID: questions.id,
+                                          answerText: answer));
+                                    }
+                                    userAnswers.answers = selectedqavm;
+                                  });
+                                }),
+                          ),
+                      if (questions.selectionType == "Text")
+                        Expanded(
+                          child: TextFormField(
+                            controller: answerController,
+                            maxLength: 100,
+                            decoration: InputDecoration(
+                                hintText: "Cevabı yazınız",
+                                contentPadding:
+                                    EdgeInsets.symmetric(vertical: 20.0)),
+                            onChanged: (value) {
                               setState(() {
-                                groupValue = answer;
                                 if (checkIsSelected(questions.id)) {
-                                  selectedqavm[index].answerText = answer;
+                                  selectedqavm[index].answerText = value;
                                 } else {
                                   selectedqavm.add(SelectedqaVM(
                                       questionID: questions.id,
-                                      answerText: answer));
+                                      answerText: value));
                                 }
                                 userAnswers.answers = selectedqavm;
                               });
-                            }),
-                      ),
-                  if (questions.selectionType == "Text")
-                    Expanded(
-                      child: TextFormField(
-                        controller: answerController,
-                        maxLength: 100,
-                        decoration: InputDecoration(
-                            hintText: "Cevabı yazınız",
-                            contentPadding:
-                                EdgeInsets.symmetric(vertical: 20.0)),
-                        onChanged: (value) {
-                          setState(() {
-                            if (checkIsSelected(questions.id)) {
-                              selectedqavm[index].answerText = value;
-                            } else {
-                              selectedqavm.add(SelectedqaVM(
-                                  questionID: questions.id, answerText: value));
-                            }
-                            userAnswers.answers = selectedqavm;
-                          });
-                        },
-                      ),
-                    )
-                ]),
-              ],
-            ),
+                            },
+                          ),
+                        )
+                    ]),
+                  ],
+                ),
+              ),
+            ],
           );
   }
 }
