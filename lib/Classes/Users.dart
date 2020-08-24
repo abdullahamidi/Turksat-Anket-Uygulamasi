@@ -1,30 +1,37 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+
 class Users {
-  int _id;
-  String name;
-  String _surName;
-  String userName = '';
-  String password = '';
-  String _email;
-  String _phoneNumber;
+  String userName;
+  String password;
+  int id;
+  bool isVerified = true;
 
   Users({this.userName, this.password});
 
-  String get getUsername {
-    return this.userName;
+  Future<void> verifyUser(String username, String pwd) async {
+    final url = "http://10.0.2.2:60065/api/accounts/verify/$username/$pwd";
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      isVerified = json.decode(response.body);
+    } else {
+      throw Exception("Bağlantı Sorunu");
+    }
   }
 
-  String get getPassword {
-    return this.password;
+  Future<void> getID(String username, String pwd) async {
+    final url = "http://10.0.2.2:60065/api/accounts/$username/$pwd";
+    var response = await http.get(url);
+    List<int> tempList = [];
+    final data = json.decode(response.body);
+    if (response.statusCode == 200) {
+      data.forEach((a) {
+        tempList.add(a);
+      });
+      if (isVerified == true) id = tempList[0];
+    } else {
+      throw Exception("Bağlantı Sorunu");
+    }
   }
-
-  factory Users.fromJson(Map<String, dynamic> json) {
-    return Users(
-      userName: json['userName'],
-      password: json['password'],
-    );
-  }
-
-  //set setUsername(username) => this._userName = username;
-
-  //set setPassword(pwd) => this._password = pwd;
 }

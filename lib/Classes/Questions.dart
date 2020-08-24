@@ -1,8 +1,26 @@
-import 'package:turksat_survey/Classes/AnswerTypes.dart';
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+import 'package:turksat_survey/ViewModels/QuestionVM.dart';
 
 class Questions {
-  String questionText;
-  AnswerTypes answerType;
+  List<QuestionVM> questions;
 
-  Questions(this.questionText);
+  Future<void> getQuestions(int surveyid) async {
+    try {
+      var url = "http://10.0.2.2:60065/api/questions/$surveyid";
+      final response = await http.get(url);
+      final data = json.decode(response.body);
+      List<QuestionVM> tempList = [];
+      data.forEach((a) {
+        tempList.add(QuestionVM(
+            id: a['id'],
+            questionText: a['questionText'],
+            selectionType: a['selectionType']));
+      });
+      questions = tempList;
+    } catch (error) {
+      print(error);
+    }
+  }
 }

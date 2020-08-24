@@ -1,67 +1,118 @@
 import 'package:flutter/material.dart';
-import 'package:turksat_survey/Widgets/AnswerWidget.dart';
+import 'package:turksat_survey/Classes/Answers.dart';
+import 'package:turksat_survey/ViewModels/QuestionVM.dart';
+import 'package:turksat_survey/ViewModels/SelectedqaVM.dart';
+import 'package:turksat_survey/ViewModels/UserAnswersVM.dart';
 
-enum answerTypes { yesOrNo, aggrement }
+class QuestionWidget extends StatefulWidget {
+  UserAnswersVM userAnswers;
+  QuestionVM questions;
 
-List<Map<String, Object>> answersList = [
-  {
-    'answerType': 'yesOrNo',
-    'answers': ['Yes', 'No']
-  },
-  {
-    'answerType': 'aggrement',
-    'answers': [
-      'Kesinlikle katılıyorum',
-      'Katılıyorum',
-      'Kararsızım',
-      'Katılmıyorum',
-      'Kesinlikle katılmıyorum',
-    ]
-  }
-];
+  QuestionWidget(this.questions, this.userAnswers);
+  @override
+  State<StatefulWidget> createState() =>
+      MyQuestionWidget(questions, userAnswers);
+}
 
-class QuestionWidget extends StatelessWidget {
-  final String questionText;
-  final answerTypes answerType;
+class MyQuestionWidget extends State<QuestionWidget> {
+  bool _isLoading = false;
+  var answerController = TextEditingController();
+  int index = 0;
+  static List<SelectedqaVM> selectedqavm = [];
+  String groupValue;
+  QuestionVM questions;
+  UserAnswersVM userAnswers = UserAnswersVM();
 
-  int determineAnswerType() {
-    int i;
-    switch (answerType) {
-      case answerTypes.yesOrNo:
-        i = answerType.index;
+  Answers answers = new Answers();
+  MyQuestionWidget(this.questions, this.userAnswers);
+
+  bool checkIsSelected(int id) {
+    bool a = false;
+
+    for (var i = 0; i < selectedqavm.length; i++) {
+      if (selectedqavm[i].questionID == id) {
+        index = i;
+        a = true;
         break;
-      case answerTypes.aggrement:
-        i = answerType.index;
-        break;
-      default:
+      } else
+        a = false;
     }
-    return i;
+
+    return a;
   }
 
-  QuestionWidget(this.questionText, this.answerType);
+  @override
+  void initState() {
+    _isLoading = true;
+    answers.getAnswers(questions.id).then((_) {
+      setState(() {
+        _isLoading = false;
+      });
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 30),
-          child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
+    return _isLoading
+        ? Center(child: CircularProgressIndicator())
+        : Padding(
+            padding: const EdgeInsets.symmetric(vertical: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
                 Text(
-                  "$questionText",
+                  "${questions.questionText}",
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+                  textAlign: TextAlign.justify,
                 ),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      ...(answersList[determineAnswerType()]['answers']
-                              as List<String>)
-                          .map((answer) {
-                        return AnswerWidget(answer,
-                            answersList[determineAnswerType()]['answers']);
-                      }).toList(),
-                    ]),
-              ])),
-    );
+                Row(children: <Widget>[
+                  if (questions.selectionType == "MultipleChoice")
+                    for (var i = 0; i < answers.answers.length; i++)
+                      Expanded(
+                        child: RadioListTile(
+                            title: Text("${answers.answers[i].answerText}"),
+                            value: answers.answers[i].answerText,
+                            groupValue: groupValue,
+                            onChanged: (answer) {
+                              setState(() {
+                                groupValue = answer;
+                                if (checkIsSelected(questions.id)) {
+                                  selectedqavm[index].answerText = answer;
+                                } else {
+                                  selectedqavm.add(SelectedqaVM(
+                                      questionID: questions.id,
+                                      answerText: answer));
+                                }
+                                userAnswers.answers = selectedqavm;
+                              });
+                            }),
+                      ),
+                  if (questions.selectionType == "Text")
+                    Expanded(
+                      child: TextFormField(
+                        controller: answerController,
+                        maxLength: 100,
+                        decoration: InputDecoration(
+                            hintText: "Cevabı yazınız",
+                            contentPadding:
+                                EdgeInsets.symmetric(vertical: 20.0)),
+                        onChanged: (value) {
+                          setState(() {
+                            if (checkIsSelected(questions.id)) {
+                              selectedqavm[index].answerText = value;
+                            } else {
+                              selectedqavm.add(SelectedqaVM(
+                                  questionID: questions.id, answerText: value));
+                            }
+                            userAnswers.answers = selectedqavm;
+                          });
+                        },
+                      ),
+                    )
+                ]),
+              ],
+            ),
+          );
   }
 }

@@ -1,12 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:turksat_survey/Screens/addressScreen.dart';
-import '../Classes/Users.dart';
+import 'dart:convert';
 
-/*Future<bool> verifyUser(String username, String password) async {
-  final url = 'http://10.0.2.2:44326/api/accounts/$username/$password';
-  var response = await http.get(url);
-  print(json.decode(response.body));
-}*/
+import 'package:flutter/material.dart';
+import 'package:turksat_survey/Classes/Users.dart';
+import 'package:turksat_survey/Screens/addressScreen.dart';
+import 'package:turksat_survey/ViewModels/UserAnswersVM.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -16,78 +13,143 @@ class LoginScreen extends StatefulWidget {
 //State Class
 
 class _MyLoginScreen extends State<LoginScreen> {
-  final userController = TextEditingController();
-  final pwdController = TextEditingController();
+  UserAnswersVM userAnswers = UserAnswersVM();
+  Users user = Users();
+  var userController = TextEditingController();
+  var pwdController = TextEditingController();
   bool _passwordVisibility = true;
+  bool _isEmpty = true;
+  bool _isLoading = false;
+  String errorText = "";
   String txtUsername;
   String txtPass;
-  Users user;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Türksat Anket Uygulaması")),
-      body: Center(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          Image.asset(
-            "assets/images/kablo.jpg",
-            alignment: Alignment.topCenter,
-            fit: BoxFit.contain,
-            scale: 2.5,
-          ),
-          //Text and Button Container
-          Container(
-              margin: EdgeInsets.only(left: 175, right: 175),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      // appBar: AppBar(title: Text("Türksat Anket Uygulaması")),
+      body: _isLoading
+          ? Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
+              child: Center(
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  TextField(
-                    controller: userController,
-                    decoration: InputDecoration(
-                      icon: Icon(Icons.account_circle, color: Colors.blue),
-                      hintText: "Kullanıcı Adını Giriniz",
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15.0),
-                          borderSide: BorderSide(color: Colors.red)),
-                    ),
+                  Image.asset(
+                    "assets/images/kablo.jpg",
+                    alignment: Alignment.topCenter,
+                    fit: BoxFit.contain,
+                    scale: 2.5,
                   ),
-                  SizedBox(height: 20.0),
-                  TextField(
-                    controller: pwdController,
-                    decoration: InputDecoration(
-                        suffixIcon: IconButton(
-                            icon: Icon(Icons.remove_red_eye),
-                            onPressed: () {
-                              setState(() {
-                                _passwordVisibility = !_passwordVisibility;
-                              });
-                            }),
-                        icon: Icon(Icons.lock, color: Colors.blue),
-                        hintText: "Şifrenizi Giriniz",
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                            borderSide: BorderSide(color: Colors.blue))),
-                    obscureText: _passwordVisibility,
-                  ),
-                  SizedBox(
-                    height: 20.0,
-                  ),
-                  RaisedButton(
-                      padding: EdgeInsets.symmetric(horizontal: 75),
-                      color: Colors.blue,
-                      textColor: Colors.white,
-                      onPressed: () {
-                        //verifyUser(userController.text, pwdController.text);
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => AddressScreen()));
-                        print("Hatalı giriş");
-                      },
-                      child: Text("Giriş Yap")),
+                  //Text and Button Container
+                  Container(
+                      width: MediaQuery.of(context).size.width / 1.5,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          TextField(
+                            onChanged: (_) => checkisEmpty(),
+                            controller: userController,
+                            decoration: InputDecoration(
+                              icon: Icon(Icons.account_circle,
+                                  color: Colors.blue),
+                              hintText: user.isVerified == false
+                                  ? "Lütfen geçerli bir Kullanıcı Adı girin!"
+                                  : "Kullanıcı Adı",
+                              hintStyle: user.isVerified == false
+                                  ? TextStyle(
+                                      color: Theme.of(context).errorColor)
+                                  : null,
+                              border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15.0),
+                                  borderSide: BorderSide(color: Colors.red)),
+                            ),
+                          ),
+                          SizedBox(height: 20.0),
+                          TextField(
+                            onChanged: (_) => checkisEmpty(),
+                            controller: pwdController,
+                            decoration: InputDecoration(
+                                suffixIcon: IconButton(
+                                    icon: Icon(Icons.remove_red_eye),
+                                    onPressed: () {
+                                      setState(() {
+                                        _passwordVisibility =
+                                            !_passwordVisibility;
+                                      });
+                                    }),
+                                icon: Icon(Icons.lock, color: Colors.blue),
+                                hintText: user.isVerified == false
+                                    ? "Lütfen geçerli bir Şifre girin!"
+                                    : "Şifre",
+                                hintStyle: user.isVerified == false
+                                    ? TextStyle(
+                                        color: Theme.of(context).errorColor)
+                                    : null,
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15.0),
+                                    borderSide:
+                                        BorderSide(color: Colors.blue))),
+                            obscureText: _passwordVisibility,
+                          ),
+                          SizedBox(height: 10.0),
+                          RaisedButton(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal:
+                                      MediaQuery.of(context).size.width / 6),
+                              color: Colors.blue,
+                              textColor: Colors.white,
+                              onPressed: _isEmpty
+                                  ? null
+                                  : () {
+                                      _isLoading = true;
+                                      user
+                                          .verifyUser(userController.text,
+                                              pwdController.text)
+                                          .then((_) {
+                                        setState(() {
+                                          user
+                                              .getID(userController.text,
+                                                  pwdController.text)
+                                              .then((value) {
+                                            setState(() {
+                                              userAnswers.userID = user.id;
+                                            });
+                                          });
+                                          _isLoading = false;
+                                          if (user.isVerified) {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AddressScreen(
+                                                            userAnswers)));
+                                          } else {
+                                            userController.clear();
+                                            pwdController.clear();
+                                            FocusScope.of(context)
+                                                .requestFocus(FocusNode());
+                                            _isEmpty = true;
+                                          }
+                                        });
+                                      });
+                                    },
+                              child: Text("Giriş Yap")),
+                        ],
+                      )),
                 ],
               )),
-        ],
-      )),
+            ),
     );
+  }
+
+  bool checkisEmpty() {
+    if (userController.text == "" || pwdController.text == "")
+      setState(() {
+        _isEmpty = true;
+      });
+    else
+      setState(() {
+        _isEmpty = false;
+      });
+    return _isEmpty;
   }
 }

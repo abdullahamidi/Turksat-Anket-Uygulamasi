@@ -1,25 +1,121 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+import 'package:turksat_survey/Classes/Questions.dart';
+import 'package:turksat_survey/Classes/api_connection.dart';
+import 'package:turksat_survey/Screens/LoginScreen.dart';
+import 'package:turksat_survey/Screens/SurveySelectScreen.dart';
+import 'package:turksat_survey/ViewModels/UserAnswersVM.dart';
 import 'package:turksat_survey/Widgets/QuestionWidget.dart';
 
 class SurveyScreen extends StatelessWidget {
+  ApiConnections apiConnection = ApiConnections();
+  bool _isLoading = false;
+  UserAnswersVM userAnswers;
+  Questions questions;
+  SurveyScreen(this.questions, this.userAnswers);
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: "Türksat Anket Sistemi",
-        darkTheme: ThemeData.dark(),
         home: Scaffold(
-            appBar: AppBar(title: Text("Türksat Anket Uygulaması")),
-            body: Column(children: <Widget>[
-              QuestionWidget(
-                  'Hizmetimizden memnun musunuz?', answerTypes.yesOrNo),
-              QuestionWidget(
-                  'Hizmet kalitesi çok iyidi', answerTypes.aggrement),
-              RaisedButton(
-                  padding: EdgeInsets.symmetric(horizontal: 75),
-                  color: Colors.blue,
-                  textColor: Colors.white,
-                  onPressed: () {},
-                  child: Text("Anketi Kaydet")),
-            ])));
+            appBar: AppBar(
+              title: Text("Türksat Anket Uygulaması"),
+              actions: [
+                IconButton(
+                    padding: EdgeInsets.only(right: 30.0),
+                    icon: Icon(Icons.power_settings_new,
+                        color: Theme.of(context).errorColor, size: 30.0),
+                    onPressed: () {
+                      Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => LoginScreen()),
+                          (Route<dynamic> route) => false);
+                    })
+              ],
+            ),
+            body: SingleChildScrollView(
+              child:
+                  Column(mainAxisAlignment: MainAxisAlignment.start, children: <
+                      Widget>[
+                for (var i = 0; i < questions.questions.length; i++)
+                  Card(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(15.0)),
+                      color: Colors.blueGrey[50],
+                      elevation: 5.0,
+                      margin: EdgeInsets.all(10.0),
+                      child:
+                          QuestionWidget(questions.questions[i], userAnswers)),
+                RaisedButton(
+                    padding: EdgeInsets.symmetric(horizontal: 75),
+                    color: Colors.blue,
+                    textColor: Colors.white,
+                    onPressed: () {
+                      _isLoading = true;
+                      apiConnection.insertAddress(userAnswers).then((_) {
+                        _isLoading = false;
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: Image.asset(
+                                  "assets/images/check.png",
+                                  scale: 3,
+                                ),
+                                content: Text(
+                                  "Adres Başarıyla Kaydedildi",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontFamily: "Oswald", fontSize: 20),
+                                ),
+                                actions: [
+                                  FlatButton(
+                                      onPressed: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    SurveySelect(userAnswers)));
+                                      },
+                                      child: Text(
+                                        "Anket Seç",
+                                        style: TextStyle(
+                                            fontFamily: "Oswald",
+                                            fontSize: 18.0),
+                                      )),
+                                  FlatButton(
+                                      onPressed: () {
+                                        SystemNavigator.pop();
+                                      },
+                                      child: Text(
+                                        "Çıkış Yap",
+                                        style: TextStyle(
+                                            fontFamily: "Oswald", fontSize: 18),
+                                      ))
+                                ],
+                              );
+                            });
+                      });
+                      // Alert(
+                      //   context: context,
+                      //   title: "Adres Başarıyla Kaydedildi",
+                      //   type: AlertType.success,
+                      //   image: Image.asset("assets/images/check.png"),
+                      // ).show();
+                      // successDialog(
+                      //   context,
+                      //   "Adres Başarıyla Kaydedildi",
+                      //   negativeText: "Çıkış Yap",
+                      //   negativeAction: () {},
+                      //   positiveText: "Yeni bir anket seç",
+                      //   positiveAction: () {},
+                      // );
+                    },
+                    child: _isLoading
+                        ? CircularProgressIndicator()
+                        : Text(
+                            "Anketi Kaydet",
+                          )),
+              ]),
+            )));
   }
 }
