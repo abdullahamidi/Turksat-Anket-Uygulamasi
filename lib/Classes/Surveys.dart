@@ -14,7 +14,7 @@ class Surveys {
   List<Surveys> surveys = [];
 
   Future<void> getSurveys() async {
-    const url = "http://192.168.1.104:60065/api/surveys";
+    const url = "https://turksatsurvey.azurewebsites.net/api/surveys";
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var data = json.decode(response.body);

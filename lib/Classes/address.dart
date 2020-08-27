@@ -11,9 +11,9 @@ import 'package:turksat_survey/ViewModels/NeighborhoodVM.dart';
 import 'package:turksat_survey/ViewModels/SAddressVM.dart';
 import 'package:turksat_survey/ViewModels/StreetVM.dart';
 
+//DB den çekilen adres verilerinin tutulduğu listeler
 class Address {
   int id;
-  //DB den çekilen adres verilerinin tutulduğu listeler
   List<CityVM> cities = [];
   List<DistrictVM> districts = [];
   List<NeighborhoodVM> neighborhoods = [];
@@ -23,10 +23,10 @@ class Address {
   SAddressVM sAddress = SAddressVM();
 
   Address();
-//Get Requests
+  //Get Requests
   Future<void> getCities() async {
     try {
-      var url = "http://192.168.1.104:60065/api/cities";
+      var url = "https://turksatsurvey.azurewebsites.net/api/cities";
       final response = await http.get(url);
       final data = json.decode(response.body);
       List<CityVM> tempList = [];
@@ -41,7 +41,7 @@ class Address {
 
   Future<void> getDistricts(int id) async {
     try {
-      var url = "http://192.168.1.104:60065/api/districts/$id";
+      var url = "https://turksatsurvey.azurewebsites.net/api/districts/$id";
       final response = await http.get(url);
       final data = json.decode(response.body);
       List<DistrictVM> tempList1 = [];
@@ -57,7 +57,7 @@ class Address {
 
   Future<void> getStreets(int id) async {
     try {
-      var url = "http://192.168.1.104:60065/api/streets/$id";
+      var url = "https://turksatsurvey.azurewebsites.net/api/streets/$id";
       final response = await http.get(url);
       final data = json.decode(response.body);
       List<StreetVM> tempList2 = [];
@@ -73,7 +73,7 @@ class Address {
 
   Future<void> getBuildings(int id) async {
     try {
-      var url = "http://192.168.1.104:60065/api/buildings/$id";
+      var url = "https://turksatsurvey.azurewebsites.net/api/buildings/$id";
       final response = await http.get(url);
       final data = json.decode(response.body);
       List<BuildingVM> tempList3 = [];
@@ -89,7 +89,7 @@ class Address {
 
   Future<void> getFlats(int id) async {
     try {
-      var url = "http://192.168.1.104:60065/api/flats/$id";
+      var url = "https://turksatsurvey.azurewebsites.net/api/flats/$id";
       final response = await http.get(url);
       final data = json.decode(response.body);
       List<FlatVM> tempList4 = [];
@@ -102,7 +102,7 @@ class Address {
 
   Future<void> getNeighborhoods(int id) async {
     try {
-      var url = "http://192.168.1.104:60065/api/neighborhoods/$id";
+      var url = "https://turksatsurvey.azurewebsites.net/api/neighborhoods/$id";
       final response = await http.get(url);
       final data = json.decode(response.body);
       List<NeighborhoodVM> tempList5 = [];
@@ -117,8 +117,9 @@ class Address {
     }
   }
 
+//Insert Address
   Future<void> insertAddress(SAddressVM addressVM) async {
-    const url = "http://192.168.1.104:60065/api/surveyaddresses/";
+    const url = "https://turksatsurvey.azurewebsites.net/api/surveyaddresses/";
 
     await http.post(url,
         headers: {"Content-Type": "application/json"},
@@ -132,9 +133,10 @@ class Address {
         }));
   }
 
+//Get id of existing address
   Future<void> getID() async {
     try {
-      var url = "http://192.168.1.104:60065/api/surveyaddresses";
+      var url = "https://turksatsurvey.azurewebsites.net/api/surveyaddresses";
       final response = await http.get(url);
       final data = json.decode(response.body);
       id = data;

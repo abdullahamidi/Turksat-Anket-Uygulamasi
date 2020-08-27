@@ -59,14 +59,17 @@ class MyQuestionWidget extends State<QuestionWidget> {
         : Column(
             children: [
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30),
+                padding: EdgeInsets.symmetric(
+                    vertical: MediaQuery.of(context).size.width / 20,
+                    horizontal: MediaQuery.of(context).size.width / 40),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget>[
                     Text(
                       "${questions.questionText}",
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: MediaQuery.of(context).size.width / 25),
                       textAlign: TextAlign.justify,
                     ),
                     Row(children: <Widget>[
@@ -74,7 +77,17 @@ class MyQuestionWidget extends State<QuestionWidget> {
                         for (var i = 0; i < answers.answers.length; i++)
                           Expanded(
                             child: RadioListTile(
-                                title: Text("${answers.answers[i].answerText}"),
+                                title: Text(
+                                  "${answers.answers[i].answerText}",
+                                  style: TextStyle(
+                                      fontSize:
+                                          MediaQuery.of(context).size.width <
+                                                      400 &&
+                                                  answers.answers.length > 3
+                                              ? 18
+                                              : 20),
+                                ),
+                                dense: true,
                                 value: answers.answers[i].answerText,
                                 groupValue: groupValue,
                                 onChanged: (answer) {
@@ -94,6 +107,7 @@ class MyQuestionWidget extends State<QuestionWidget> {
                       if (questions.selectionType == "Text")
                         Expanded(
                           child: TextFormField(
+                            style: TextStyle(fontSize: 20),
                             controller: answerController,
                             maxLength: 100,
                             decoration: InputDecoration(

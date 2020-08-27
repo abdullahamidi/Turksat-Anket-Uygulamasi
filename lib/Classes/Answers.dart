@@ -9,7 +9,8 @@ class Answers {
 
   Future<void> getAnswers(int questionid) async {
     try {
-      var url = "http://192.168.1.104:60065/api/answers/$questionid";
+      var url =
+          "https://turksatsurvey.azurewebsites.net/api/answers/$questionid";
       final response = await http.get(url);
       final data = json.decode(response.body);
       List<AnswerVM> tempList = [];
@@ -23,7 +24,7 @@ class Answers {
   }
 
   Future<void> insertAnswers(UserAnswersVM userAnswers) async {
-    const url = "http://192.168.1.104:60065/api/useranswers";
+    const url = "https://turksatsurvey.azurewebsites.net/api/useranswers";
     for (var i = 0; i < userAnswers.answers.length; i++) {
       await http
           .post(url,

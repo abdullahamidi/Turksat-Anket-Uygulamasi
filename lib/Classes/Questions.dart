@@ -8,7 +8,8 @@ class Questions {
 
   Future<void> getQuestions(int surveyid) async {
     try {
-      var url = "http://192.168.1.104:60065/api/questions/$surveyid";
+      var url =
+          "https://turksatsurvey.azurewebsites.net/api/questions/$surveyid";
       final response = await http.get(url);
       final data = json.decode(response.body);
       List<QuestionVM> tempList = [];
