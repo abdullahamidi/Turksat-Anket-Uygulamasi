@@ -1,21 +1,18 @@
-<<<<<<< HEAD
-# Turksat_Survey
-Türksat Staj Projem
-=======
-# turksat_survey
 
-A new Flutter project.
+# Turksat Anket Uygulaması
 
-## Getting Started
+Uygulamayı çalıştırmak için aşağıda bulunan linkten Flutter SDK'sını indirin.
 
-This project is a starting point for a Flutter application.
+https://flutter.dev/docs/get-started/install/windows
 
-A few resources to get you started if this is your first Flutter project:
+İndirme yaptıktan sonra çalıştırmak istediğiniz IDE (Android Studio, Visual Studio Code) için Flutter ve Dart eklentisini kurun.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+Bilgisayara bağlı bir cihazınız var ise Çalıştır tuşuna basarak uygulamayı bağlı cihazınızda açabilirsiniz.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
->>>>>>> 3fa131b... initial commit
+Bağlı bir cihazınız yok ise;
+
+    -Android Studio programını indirin.
+    -Android Studio>Araçlar>AVD Yöneticisi'ne tıklayın ve Sanal Cihaz Oluştur'a tıklayın.
+    -Oluşturmak istediğiniz cihazı seçip kurulumu tamamlayın.
+ 
+Kurulum işleminden sonra AVD Yöneticisi ekranında indirdiğiniz aygıtı çalıştırarak uygulamayı kullanabilirsiniz.
