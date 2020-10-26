@@ -119,18 +119,22 @@ class Address {
 
 //Insert Address
   Future<void> insertAddress(SAddressVM addressVM) async {
-    const url = "https://turksatsurvey.azurewebsites.net/api/surveyaddresses/";
-
-    await http.post(url,
-        headers: {"Content-Type": "application/json"},
-        body: json.encode({
-          'CityName': addressVM.cityName,
-          'DistrictName': addressVM.districtName,
-          'NeighborhoodName': addressVM.neighborhoodName,
-          'StreetName': addressVM.streetName,
-          'BuildingName': addressVM.buildingName,
-          'FlatNumber': addressVM.flatNumber
-        }));
+    try {
+      const url =
+          "https://turksatsurvey.azurewebsites.net/api/surveyaddresses/";
+      await http.post(url,
+          headers: {"Content-Type": "application/json"},
+          body: json.encode({
+            'CityName': addressVM.cityName,
+            'DistrictName': addressVM.districtName,
+            'NeighborhoodName': addressVM.neighborhoodName,
+            'StreetName': addressVM.streetName,
+            'BuildingName': addressVM.buildingName,
+            'FlatNumber': addressVM.flatNumber
+          }));
+    } catch (e) {
+      print("error");
+    }
   }
 
 //Get id of existing address
